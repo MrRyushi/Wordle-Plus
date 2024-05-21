@@ -4,6 +4,7 @@ import Home from './Home'
 import About from './About'
 import Login from './Login'
 import Register from './Register'
+import Game from './Game'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
 				<Route path='/about' element={<About />}/>
 				<Route path='/login' element={<Login />}/>
 				<Route path='/register' element={<Register />}/>
+				<Route path='/game' element={<Game />}/>
 			</Routes>
 		</BrowserRouter>
     </>
