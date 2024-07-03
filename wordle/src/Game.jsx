@@ -95,7 +95,7 @@ export default function Game() {
     setShowLoseModal(false);
 
     // Fetch a new word to guess
-    fetch("http://localhost:3000/api/word")
+    fetch("https://backend-eosin-two.vercel.app/api/word")
       .then((response) => response.json())
       .then((data) => {
         setWordToGuess(data.word);
