@@ -44,12 +44,12 @@ export default function Game() {
       let allCorrect = true;
       for (let i = 0; i < 5; i++) {
         if (formedWord[i] === wordToGuess[i]) {
-          inputsRef.current[row][i].classList.add("bg-blue-800");
+          inputsRef.current[row][i].classList.add("bg-green-500");
         } else if (wordToGuess.includes(formedWord[i])) {
           inputsRef.current[row][i].classList.add("bg-yellow-800");
           allCorrect = false;
         } else {
-          inputsRef.current[row][i].classList.add("bg-slate-800");
+          inputsRef.current[row][i].classList.add("bg-gray-500");
           allCorrect = false;
         }
       }
