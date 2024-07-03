@@ -5,7 +5,8 @@ export default function Game() {
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showWinModal, setShowWinModal] = useState(false);
+  const [showLoseModal, setShowLoseModal] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/word")
@@ -49,7 +50,6 @@ export default function Game() {
         } else if (wordToGuess.includes(formedWord[i])) {
           inputsRef.current[row][i].classList.remove("bg-transparent");
           inputsRef.current[row][i].classList.add("bg-yellow-800");
-          
           allCorrect = false;
         } else {
           inputsRef.current[row][i].classList.remove("bg-transparent");
@@ -59,10 +59,10 @@ export default function Game() {
       }
 
       if (allCorrect && formedWord === wordToGuess) {
-        setShowModal(true);
-      }
-
-      if (row < 5) {
+        setShowWinModal(true);
+      } else if (row === 5 && formedWord !== wordToGuess) {
+        setShowLoseModal(true);
+      } else if (row < 5) {
         // Disable the current row
         for (let i = 0; i < 5; i++) {
           inputsRef.current[row][i].disabled = true;
@@ -83,6 +83,7 @@ export default function Game() {
       row.forEach((input) => {
         input.value = "";
         input.classList.remove("bg-green-800", "bg-yellow-800", "bg-gray-500");
+        input.classList.add("bg-transparent");
         input.disabled = false;
       });
     });
@@ -90,7 +91,8 @@ export default function Game() {
     // Reset game states
     setWords(Array(6).fill(""));
     setCurrentRow(0);
-    setShowModal(false);
+    setShowWinModal(false);
+    setShowLoseModal(false);
 
     // Fetch a new word to guess
     fetch("http://localhost:3000/api/word")
@@ -98,17 +100,33 @@ export default function Game() {
       .then((data) => {
         setWordToGuess(data.word);
       });
-    setShowModal(false);
   };
 
   return (
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-900 to-slate-700 w-screen h-screen">
-      {showModal && (
+      {showWinModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
           <h1 className="text-3xl text-center">Congrats! You guessed the word!</h1>
           <div className="flex justify-end space-x-4">
-            <button button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">Reset</button>
-            <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">Close</button>
+            <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
+              Reset
+            </button>
+            <button onClick={() => setShowWinModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {showLoseModal && (
+        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
+          <h1 className="text-3xl text-center">Aww, You failed to guess the word!</h1>
+          <div className="flex justify-end space-x-4">
+            <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
+              Reset
+            </button>
+            <button onClick={() => setShowLoseModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">
+              Close
+            </button>
           </div>
         </div>
       )}
