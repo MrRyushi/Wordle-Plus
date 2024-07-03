@@ -106,7 +106,7 @@ export default function Game() {
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-900 to-slate-700 w-screen h-screen">
       {showWinModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
-          <h1 className="text-3xl text-center">Congrats! You guessed the word!</h1>
+          <h1 className="text-3xl text-center">Congrats! You guessed the word! The word is {wordToGuess}</h1>
           <div className="flex justify-end space-x-4">
             <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
               Reset
@@ -119,7 +119,7 @@ export default function Game() {
       )}
       {showLoseModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
-          <h1 className="text-3xl text-center">Aww, You failed to guess the word!</h1>
+          <h1 className="text-3xl text-center">Aww, You failed to guess the word! The word is {wordToGuess}</h1>
           <div className="flex justify-end space-x-4">
             <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
               Reset
