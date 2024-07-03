@@ -44,11 +44,15 @@ export default function Game() {
       let allCorrect = true;
       for (let i = 0; i < 5; i++) {
         if (formedWord[i] === wordToGuess[i]) {
-          inputsRef.current[row][i].classList.add("bg-green-500");
+          inputsRef.current[row][i].classList.remove("bg-transparent");
+          inputsRef.current[row][i].classList.add("bg-green-800");
         } else if (wordToGuess.includes(formedWord[i])) {
+          inputsRef.current[row][i].classList.remove("bg-transparent");
           inputsRef.current[row][i].classList.add("bg-yellow-800");
+          
           allCorrect = false;
         } else {
+          inputsRef.current[row][i].classList.remove("bg-transparent");
           inputsRef.current[row][i].classList.add("bg-gray-500");
           allCorrect = false;
         }
@@ -78,7 +82,7 @@ export default function Game() {
     inputsRef.current.forEach((row) => {
       row.forEach((input) => {
         input.value = "";
-        input.classList.remove("bg-green-800", "bg-yellow-800", "bg-gray-800");
+        input.classList.remove("bg-green-800", "bg-yellow-800", "bg-gray-500");
         input.disabled = false;
       });
     });
@@ -119,7 +123,7 @@ export default function Game() {
                 <input
                   key={colIndex}
                   type="text"
-                  className="text-2xl h-20 text-slate-50 border p-1 block bg-transparent text-center uppercase"
+                  className="text-2xl h-20 text-slate-50 border bg-transparent p-1 block text-center uppercase"
                   maxLength="1"
                   onInput={() => handleInput(rowIndex, colIndex)}
                   onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
