@@ -78,15 +78,18 @@ export default function Game() {
   };
 
   const resetGame = () => {
-    // Clear all inputs
-    inputsRef.current.forEach((row) => {
+    // Clear all inputs and set the first row to be editable
+    inputsRef.current.forEach((row, rowIndex) => {
       row.forEach((input) => {
         input.value = "";
         input.classList.remove("bg-green-800", "bg-yellow-800", "bg-gray-500");
         input.classList.add("bg-transparent");
-        input.disabled = false;
+        input.disabled = rowIndex !== 0; // Disable all rows except the first one
       });
     });
+
+    // Set focus on the first input of the first row
+    inputsRef.current[0][0].focus();
 
     // Reset game states
     setWords(Array(6).fill(""));
