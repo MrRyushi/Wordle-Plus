@@ -63,11 +63,11 @@ export default function Login() {
 							required
 							value={password}/>
 					</div>
-					<button className='mx-auto px-4 py-2 block rounded-lg bg-green-700 text-slate-50 w-2/3'>Log in</button>
+					<button className='mx-auto px-4 py-2 block rounded-lg bg-green-700 hover:bg-green-600 text-slate-50 w-2/3 '>Log in</button>
 				</form>
 				<div className='flex justify-between items-center w-2/3 mx-auto'>
-					<button className='text-gray-400 text-sm'>Forgot password?</button>
-					<button className='text-gray-400 text-sm' onClick={() => navigate('/register')}>Don't have an account?</button>
+					<button className='text-gray-400 text-sm hover:underline underline-offset-4'>Forgot password?</button>
+					<button className='text-gray-400 text-sm hover:underline underline-offset-4' onClick={() => navigate('/register')}>Don't have an account?</button>
 				</div>
 			</div>
 		</div>
