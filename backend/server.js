@@ -3,11 +3,14 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+/*
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -47,7 +50,7 @@ db.connect(err => {
         console.log('Table "users" created or already exists.');
     });
 });
-
+*/
 // Function to get a random word from the text file
 function getRandomWord() {
   const filePath = path.join(__dirname, '../wordle/src/assets/library.txt'); // Update with the correct path to your text file
@@ -63,7 +66,7 @@ app.get('/api/word', (req, res) => {
   console.log("Word:" + word)
   res.json({ word });
 });
-
+/*
 // Routes
 app.post('/api/register', (req, res) => {
     const { username, email, password } = req.body;
@@ -121,8 +124,8 @@ app.post('/api/login', (req, res) => {
         res.status(200).json({ message: 'Login successful' });
     });
 });
+*/
 
-
-app.listen(3000, () => {
-    console.log(`Server is running on port 3000`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 });

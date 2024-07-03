@@ -44,7 +44,7 @@ export default function Game() {
       let allCorrect = true;
       for (let i = 0; i < 5; i++) {
         if (formedWord[i] === wordToGuess[i]) {
-          inputsRef.current[row][i].classList.add("bg-green-800");
+          inputsRef.current[row][i].classList.add("bg-green-900");
         } else if (wordToGuess.includes(formedWord[i])) {
           inputsRef.current[row][i].classList.add("bg-yellow-800");
           allCorrect = false;
