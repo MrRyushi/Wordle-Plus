@@ -1,4 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { app, db } from "../firebase/firebase"; // Ensure the correct path to your firebase.ts fileimport { collection, addDoc } from "firebase/firestore";
 
 export default function Game() {
   const inputsRef = useRef([]);
@@ -7,6 +10,26 @@ export default function Game() {
   const [wordToGuess, setWordToGuess] = useState("");
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
+  const [gameComplete, setGameComplete] = useState(false);
+  const [userCurrentWins, setUserCurrentWins] = useState(0);
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid;
+        const unsub = onSnapshot(doc(db, "users", uid), (doc) => {
+          console.log("Current data: ", doc.data());
+        });
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+  });
 
   useEffect(() => {
     fetch("https://backend-eosin-two.vercel.app/api/word")
@@ -60,8 +83,10 @@ export default function Game() {
 
       if (allCorrect && formedWord === wordToGuess) {
         setShowWinModal(true);
+        setGameComplete(true);
       } else if (row === 5 && formedWord !== wordToGuess) {
         setShowLoseModal(true);
+        setGameComplete(true);
       } else if (row < 5) {
         // Disable the current row
         for (let i = 0; i < 5; i++) {
@@ -75,6 +100,34 @@ export default function Game() {
         setCurrentRow(row + 1);
       }
     }
+  };
+
+  useEffect(() => {
+    if (gameComplete) {
+      handleGameComplete();
+    }
+  }, [gameComplete]);
+
+  const handleGameComplete = () => {
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid;
+        // Add a new document in collection "cities"
+        try {
+          const statsRef = doc(db, "users", uid);
+          setDoc(statsRef, { wins: 1 }, { merge: true });
+        } catch (error) {
+          console.log(error);
+        }
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
   };
 
   const resetGame = () => {
@@ -96,6 +149,7 @@ export default function Game() {
     setCurrentRow(0);
     setShowWinModal(false);
     setShowLoseModal(false);
+    setGameComplete(false);
 
     // Fetch a new word to guess
     fetch("https://backend-eosin-two.vercel.app/api/word")
@@ -109,12 +163,20 @@ export default function Game() {
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-900 to-slate-700 w-screen h-screen">
       {showWinModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
-          <h1 className="text-3xl text-center">Congrats! You guessed the word! The word is {wordToGuess}</h1>
+          <h1 className="text-3xl text-center">
+            Congrats! You guessed the word! The word is {wordToGuess}
+          </h1>
           <div className="flex justify-end space-x-4">
-            <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
+            <button
+              onClick={resetGame}
+              className="px-4 py-2 bg-green-500 rounded-xl"
+            >
               Reset
             </button>
-            <button onClick={() => setShowWinModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">
+            <button
+              onClick={() => setShowWinModal(false)}
+              className="px-4 py-2 bg-red-500 rounded-xl"
+            >
               Close
             </button>
           </div>
@@ -122,12 +184,20 @@ export default function Game() {
       )}
       {showLoseModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
-          <h1 className="text-3xl text-center">Aww, You failed to guess the word! The word is {wordToGuess}</h1>
+          <h1 className="text-3xl text-center">
+            Aww, You failed to guess the word! The word is {wordToGuess}
+          </h1>
           <div className="flex justify-end space-x-4">
-            <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
+            <button
+              onClick={resetGame}
+              className="px-4 py-2 bg-green-500 rounded-xl"
+            >
               Reset
             </button>
-            <button onClick={() => setShowLoseModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">
+            <button
+              onClick={() => setShowLoseModal(false)}
+              className="px-4 py-2 bg-red-500 rounded-xl"
+            >
               Close
             </button>
           </div>
@@ -160,8 +230,14 @@ export default function Game() {
             </div>
           ))}
         </div>
-        <div className="flex justify-end px-3">
-          <button className="bg-slate-200 px-4 py-2 rounded-xl" onClick={resetGame}>Reset</button>
+        <div className="flex justify-end px-3 space-x-3">
+          <button
+            className="bg-slate-200 px-4 py-2 rounded-xl"
+            onClick={resetGame}
+          >
+            Reset
+          </button>
+          <button className="bg-red-300 px-4 py-2 rounded-xl">Logout</button>
         </div>
       </div>
     </div>
