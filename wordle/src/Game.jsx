@@ -1,12 +1,48 @@
 import React, { useRef, useState, useEffect } from "react";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { app, auth, db } from "../firebase/firebase"; // Ensure the correct path to your firebase.ts fileimport { collection, addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function Game() {
   const inputsRef = useRef([]);
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
+  // modals
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
+  const [gameComplete, setGameComplete] = useState(false);
+  // firebase / stats
+  const [userCurrentWins, setUserCurrentWins] = useState(0);
+  const [userCurrentLoss, setUserCurrentLoss] = useState(0);
+  const [userCurrentStreak, setUserCurrentStreak] = useState(0);
+
+  const [uid, setUID] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid;
+        setUID(uid);
+        const unsub = onSnapshot(doc(db, "users", uid), (doc) => {
+          const userData = doc.data();
+          setUserCurrentWins(userData.wins);
+          setUserCurrentLoss(userData.loss);
+          setUserCurrentStreak(userData.streak);
+        });
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+  });
 
   useEffect(() => {
     fetch("https://backend-eosin-two.vercel.app/api/word")
@@ -23,6 +59,7 @@ export default function Game() {
   };
 
   const handleKeyDown = (e, row, col) => {
+    console.log(userCurrentLoss);
     if (
       e.key === "Backspace" &&
       col > 0 &&
@@ -60,8 +97,10 @@ export default function Game() {
 
       if (allCorrect && formedWord === wordToGuess) {
         setShowWinModal(true);
+        setGameComplete(true);
       } else if (row === 5 && formedWord !== wordToGuess) {
         setShowLoseModal(true);
+        setGameComplete(true);
       } else if (row < 5) {
         // Disable the current row
         for (let i = 0; i < 5; i++) {
@@ -75,6 +114,55 @@ export default function Game() {
         setCurrentRow(row + 1);
       }
     }
+  };
+
+  useEffect(() => {
+    if (gameComplete) {
+      handleGameComplete();
+    }
+  }, [gameComplete]);
+
+  const handleGameComplete = () => {
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid;
+        // Add a new document in collection "cities"
+        try {
+          const statsRef = doc(db, "users", uid);
+
+          if (showWinModal) {
+            setDoc(
+              statsRef,
+              {
+                wins: userCurrentWins + 1,
+                loss: userCurrentLoss,
+                streak: userCurrentStreak + 1,
+              },
+              { merge: true }
+            );
+          } else if (showLoseModal) {
+            setDoc(
+              statsRef,
+              {
+                wins: userCurrentWins,
+                loss: userCurrentLoss + 1,
+                streak: 0,
+              },
+              { merge: true }
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
   };
 
   const resetGame = () => {
@@ -96,6 +184,7 @@ export default function Game() {
     setCurrentRow(0);
     setShowWinModal(false);
     setShowLoseModal(false);
+    setGameComplete(false);
 
     // Fetch a new word to guess
     fetch("https://backend-eosin-two.vercel.app/api/word")
@@ -105,16 +194,42 @@ export default function Game() {
       });
   };
 
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        console.log("Logout successful");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        // An error happened.
+      });
+  };
+
   return (
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-900 to-slate-700 w-screen h-screen">
       {showWinModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
-          <h1 className="text-3xl text-center">Congrats! You guessed the word! The word is {wordToGuess}</h1>
+          <h1 className="text-3xl text-center">
+            Congrats! You guessed the word! The word is {wordToGuess}
+          </h1>
+          <div className="flex justify-center gap-x-3">
+            <h2>Wins: {userCurrentWins}</h2>
+            <h2>Loss: {userCurrentLoss}</h2>
+            <h2>Streak: {userCurrentStreak}</h2>
+          </div>
           <div className="flex justify-end space-x-4">
-            <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
+            <button
+              onClick={resetGame}
+              className="px-4 py-2 bg-green-500 rounded-xl"
+            >
               Reset
             </button>
-            <button onClick={() => setShowWinModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">
+            <button
+              onClick={() => setShowWinModal(false)}
+              className="px-4 py-2 bg-red-500 rounded-xl"
+            >
               Close
             </button>
           </div>
@@ -122,12 +237,25 @@ export default function Game() {
       )}
       {showLoseModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
-          <h1 className="text-3xl text-center">Aww, You failed to guess the word! The word is {wordToGuess}</h1>
+          <h1 className="text-3xl text-center">
+            Aww, You failed to guess the word! The word is {wordToGuess}
+          </h1>
+          <div className="flex justify-center gap-x-3">
+            <h2>Wins: {userCurrentWins}</h2>
+            <h2>Loss: {userCurrentLoss}</h2>
+            <h2>Streak: 0</h2>
+          </div>
           <div className="flex justify-end space-x-4">
-            <button onClick={resetGame} className="px-4 py-2 bg-green-500 rounded-xl">
+            <button
+              onClick={resetGame}
+              className="px-4 py-2 bg-green-500 rounded-xl"
+            >
               Reset
             </button>
-            <button onClick={() => setShowLoseModal(false)} className="px-4 py-2 bg-red-500 rounded-xl">
+            <button
+              onClick={() => setShowLoseModal(false)}
+              className="px-4 py-2 bg-red-500 rounded-xl"
+            >
               Close
             </button>
           </div>
@@ -160,8 +288,21 @@ export default function Game() {
             </div>
           ))}
         </div>
-        <div className="flex justify-end px-3">
-          <button className="bg-slate-200 px-4 py-2 rounded-xl" onClick={resetGame}>Reset</button>
+        <div className="flex justify-end px-3 space-x-3">
+          <button
+            className="bg-slate-200 px-4 py-2 rounded-xl"
+            onClick={resetGame}
+          >
+            Reset
+          </button>
+          {uid && (
+            <button
+              className="bg-red-300 px-4 py-2 rounded-xl"
+              onClick={() => handleLogout()}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </div>
