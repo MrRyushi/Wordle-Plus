@@ -374,7 +374,7 @@ export default function Game() {
           </button>
           <button
             className="bg-yellow-900 px-4 py-2 rounded-xl"
-            onClick={resetGame}
+            onClick={() => navigate('/leaderboards')}
           >
             Leaderboards
           </button>
