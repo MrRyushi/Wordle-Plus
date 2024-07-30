@@ -63,7 +63,6 @@ export default function Game() {
         return response.json();
       })
       .then((data) => {
-        console.log('Fetched data:', data);
         setWordsLibrary(data.words);
       })
       .catch((error) => {
@@ -93,7 +92,6 @@ export default function Game() {
       for (let i = 0; i < 5; i++) {
         formedWord += inputsRef.current[row][i].value.toUpperCase();
       }
-      console.log(wordsLibrary)
       if(wordsLibrary.includes(formedWord.toLowerCase())){
         const newWords = [...words];
         newWords[row] = formedWord;
@@ -105,6 +103,9 @@ export default function Game() {
           if (formedWord[i] === wordToGuess[i]) {
             inputsRef.current[row][i].classList.remove("bg-transparent");
             inputsRef.current[row][i].classList.add("bg-green-800");
+            const letter = inputsRef.current[row][i].value.toUpperCase();
+            const button = document.getElementById(letter);
+            button.classList.add("bg-green-800")
           } else if (wordToGuess.includes(formedWord[i])) {
             inputsRef.current[row][i].classList.remove("bg-transparent");
             inputsRef.current[row][i].classList.add("bg-yellow-800");
@@ -113,6 +114,10 @@ export default function Game() {
             inputsRef.current[row][i].classList.remove("bg-transparent");
             inputsRef.current[row][i].classList.add("bg-gray-500");
             allCorrect = false;
+            const letter = inputsRef.current[row][i].value.toUpperCase();
+            const button = document.getElementById(letter)
+            button.classList.add("bg-gray-900")
+            button.disabled=true
           }
         }
 
@@ -200,6 +205,20 @@ export default function Game() {
       });
     });
 
+    // reset buttons
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    for (let i = 0; i < letters.length; i++) {
+      const letter = letters[i];
+      const button = document.getElementById(letter);
+    
+      if (button) {
+        button.classList.add('bg-gray-500');
+        button.classList.remove('bg-green-800', 'bg-gray-900');
+      }
+    }
+    
+
     // Set focus on the first input of the first row
     inputsRef.current[0][0].focus();
 
@@ -232,7 +251,7 @@ export default function Game() {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 w-screen h-screen">
+    <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 h-auto py-12 overflow-x-hidden">
       {showWinModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute poppins">
           <h1 className="text-3xl text-center">
@@ -286,9 +305,6 @@ export default function Game() {
         </div>
       )}
       <div className="w-11/12 xs:w-10/12 sm:w-9/12 space-y-10">
-        <h1 className="text-center text-4xl md:text-6xl text-slate-50 poppins">
-          Wordle Plus
-        </h1>
         <div className="grid grid-rows-6 gap-3 mx-auto w-11/12 xs:w-10/12 sm:w-9/12 md:w-2/3 lg:w-1/2 xl:w-2/5">
           {[...Array(6)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-3">
@@ -311,6 +327,43 @@ export default function Game() {
               ))}
             </div>
           ))}
+        </div>
+        <div className="space-y-3">
+          <div className="flex justify-center gap-x-2">
+            <button id="Q" className="text-2xl p-2 rounded-md bg-gray-500 text-white">Q</button>
+            <button id="W" className="text-2xl p-2 rounded-md bg-gray-500 text-white">W</button>
+            <button id="E" className="text-2xl p-2 rounded-md bg-gray-500 text-white">E</button>
+            <button id="R" className="text-2xl p-2 rounded-md bg-gray-500 text-white">R</button>
+            <button id="T" className="text-2xl p-2 rounded-md bg-gray-500 text-white">T</button>
+            <button id="Y" className="text-2xl p-2 rounded-md bg-gray-500 text-white">Y</button>
+            <button id="U" className="text-2xl p-2 rounded-md bg-gray-500 text-white">U</button>
+            <button id="I" className="text-2xl p-2 rounded-md bg-gray-500 text-white">I</button>
+            <button id="O" className="text-2xl p-2 rounded-md bg-gray-500 text-white">O</button>
+            <button id="P" className="text-2xl p-2 rounded-md bg-gray-500 text-white">P</button>
+          </div>
+          <div className="flex justify-center gap-x-2">
+            <button id="A" className="text-2xl p-2 rounded-md bg-gray-500 text-white">A</button>
+            <button id="S" className="text-2xl p-2 rounded-md bg-gray-500 text-white">S</button>
+            <button id="D" className="text-2xl p-2 rounded-md bg-gray-500 text-white">D</button>
+            <button id="F" className="text-2xl p-2 rounded-md bg-gray-500 text-white">F</button>
+            <button id="G" className="text-2xl p-2 rounded-md bg-gray-500 text-white">G</button>
+            <button id="H" className="text-2xl p-2 rounded-md bg-gray-500 text-white">H</button>
+            <button id="J" className="text-2xl p-2 rounded-md bg-gray-500 text-white">J</button>
+            <button id="K" className="text-2xl p-2 rounded-md bg-gray-500 text-white">K</button>
+            <button id="L" className="text-2xl p-2 rounded-md bg-gray-500 text-white">L</button>
+          </div>
+          <div className="flex justify-center gap-x-2">
+            {/*<button id="Enter" className="text-lg p-2 rounded-md bg-gray-500 text-white">Enter</button>*/}
+            <button id="Z" className="text-2xl p-2 rounded-md bg-gray-500 text-white">Z</button>
+            <button id="X" className="text-2xl p-2 rounded-md bg-gray-500 text-white">X</button>
+            <button id="C" className="text-2xl p-2 rounded-md bg-gray-500 text-white">C</button>
+            <button id="V" className="text-2xl p-2 rounded-md bg-gray-500 text-white">V</button>
+            <button id="B" className="text-2xl p-2 rounded-md bg-gray-500 text-white">B</button>
+            <button id="N" className="text-2xl p-2 rounded-md bg-gray-500 text-white">N</button>
+            <button id="M" className="text-2xl p-2 rounded-md bg-gray-500 text-white">M</button>
+            {/*<button id="Erase" className="text-lg p-2 rounded-md bg-gray-500 text-white">Erase</button>*/}
+          </div>
+
         </div>
         <div className="flex justify-end px-3 space-x-3 poppins">
           <button
