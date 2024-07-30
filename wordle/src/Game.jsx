@@ -372,6 +372,12 @@ export default function Game() {
           >
             Reset
           </button>
+          <button
+            className="bg-yellow-900 px-4 py-2 rounded-xl"
+            onClick={resetGame}
+          >
+            Leaderboards
+          </button>
           {uid && (
             <button
               className="bg-red-300 px-4 py-2 rounded-xl"
