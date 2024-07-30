@@ -1,17 +1,26 @@
 import React, { useRef, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
-import { app, db } from "../firebase/firebase"; // Ensure the correct path to your firebase.ts fileimport { collection, addDoc } from "firebase/firestore";
+import { app, auth, db } from "../firebase/firebase"; // Ensure the correct path to your firebase.ts fileimport { collection, addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function Game() {
   const inputsRef = useRef([]);
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
+  // modals
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
+  // firebase / stats
   const [userCurrentWins, setUserCurrentWins] = useState(0);
+  const [userCurrentLoss, setUserCurrentLoss] = useState(0);
+  const [userCurrentStreak, setUserCurrentStreak] = useState(0);
+
+  const [uid, setUID] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const auth = getAuth();
@@ -20,8 +29,12 @@ export default function Game() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
+        setUID(uid);
         const unsub = onSnapshot(doc(db, "users", uid), (doc) => {
-          console.log("Current data: ", doc.data());
+          const userData = doc.data();
+          setUserCurrentWins(userData.wins);
+          setUserCurrentLoss(userData.loss);
+          setUserCurrentStreak(userData.streak);
         });
         // ...
       } else {
@@ -46,6 +59,7 @@ export default function Game() {
   };
 
   const handleKeyDown = (e, row, col) => {
+    console.log(userCurrentLoss);
     if (
       e.key === "Backspace" &&
       col > 0 &&
@@ -118,7 +132,28 @@ export default function Game() {
         // Add a new document in collection "cities"
         try {
           const statsRef = doc(db, "users", uid);
-          setDoc(statsRef, { wins: 1 }, { merge: true });
+
+          if (showWinModal) {
+            setDoc(
+              statsRef,
+              {
+                wins: userCurrentWins + 1,
+                loss: userCurrentLoss,
+                streak: userCurrentStreak + 1,
+              },
+              { merge: true }
+            );
+          } else if (showLoseModal) {
+            setDoc(
+              statsRef,
+              {
+                wins: userCurrentWins,
+                loss: userCurrentLoss + 1,
+                streak: 0,
+              },
+              { merge: true }
+            );
+          }
         } catch (error) {
           console.log(error);
         }
@@ -159,6 +194,19 @@ export default function Game() {
       });
   };
 
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        console.log("Logout successful");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        // An error happened.
+      });
+  };
+
   return (
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-900 to-slate-700 w-screen h-screen">
       {showWinModal && (
@@ -166,6 +214,11 @@ export default function Game() {
           <h1 className="text-3xl text-center">
             Congrats! You guessed the word! The word is {wordToGuess}
           </h1>
+          <div className="flex justify-center gap-x-3">
+            <h2>Wins: {userCurrentWins}</h2>
+            <h2>Loss: {userCurrentLoss}</h2>
+            <h2>Streak: {userCurrentStreak}</h2>
+          </div>
           <div className="flex justify-end space-x-4">
             <button
               onClick={resetGame}
@@ -187,6 +240,11 @@ export default function Game() {
           <h1 className="text-3xl text-center">
             Aww, You failed to guess the word! The word is {wordToGuess}
           </h1>
+          <div className="flex justify-center gap-x-3">
+            <h2>Wins: {userCurrentWins}</h2>
+            <h2>Loss: {userCurrentLoss}</h2>
+            <h2>Streak: 0</h2>
+          </div>
           <div className="flex justify-end space-x-4">
             <button
               onClick={resetGame}
@@ -237,7 +295,14 @@ export default function Game() {
           >
             Reset
           </button>
-          <button className="bg-red-300 px-4 py-2 rounded-xl">Logout</button>
+          {uid && (
+            <button
+              className="bg-red-300 px-4 py-2 rounded-xl"
+              onClick={() => handleLogout()}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </div>

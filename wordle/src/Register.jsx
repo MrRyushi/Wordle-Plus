@@ -32,6 +32,9 @@ export default function Register() {
           // Add a new document with a generated id.
           const docRef = await setDoc(doc(db, "users", user.uid), {
             username: username,
+            wins: 0,
+            loss: 0,
+            streak: 0,
           });
 
           setSuccessMessage("Successfully Registered");
