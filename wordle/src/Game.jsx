@@ -55,7 +55,7 @@ export default function Game() {
   }, []);
 
   useEffect(() => {
-    fetch("http://backend-eosin-two.vercel.app/api/words")
+    fetch("https://backend-eosin-two.vercel.app/api/words")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
