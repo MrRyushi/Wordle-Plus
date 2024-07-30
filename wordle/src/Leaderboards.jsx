@@ -50,7 +50,7 @@ export const Leaderboards = () => {
             </div>
           ))}
         </div>
-        <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl" onClick={() => navigate('/')}>Back</button>
+        <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl" onClick={() => navigate('/game')}>Back</button>
       </div>
     </div>
   );
