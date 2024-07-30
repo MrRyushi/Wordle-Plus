@@ -10,6 +10,7 @@ export default function Game() {
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
+  const [wordsLibrary, setWordsLibrary] = useState([])
   // modals
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
@@ -53,6 +54,25 @@ export default function Game() {
       });
   }, []);
 
+  useEffect(() => {
+    fetch("http://localhost:3000/api/words")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Fetched data:', data);
+        setWordsLibrary(data.words);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+
+
   const handleInput = (row, col) => {
     if (inputsRef.current[row][col].value.length === 1 && col < 4) {
       inputsRef.current[row][col + 1].focus();
@@ -60,7 +80,6 @@ export default function Game() {
   };
 
   const handleKeyDown = (e, row, col) => {
-    console.log(userCurrentLoss);
     if (
       e.key === "Backspace" &&
       col > 0 &&
@@ -74,45 +93,49 @@ export default function Game() {
       for (let i = 0; i < 5; i++) {
         formedWord += inputsRef.current[row][i].value.toUpperCase();
       }
+      console.log(wordsLibrary)
+      if(wordsLibrary.includes(formedWord.toLowerCase())){
+        const newWords = [...words];
+        newWords[row] = formedWord;
+        setWords(newWords);
 
-      const newWords = [...words];
-      newWords[row] = formedWord;
-      setWords(newWords);
-
-      // Check the formed word against the pre-defined word
-      let allCorrect = true;
-      for (let i = 0; i < 5; i++) {
-        if (formedWord[i] === wordToGuess[i]) {
-          inputsRef.current[row][i].classList.remove("bg-transparent");
-          inputsRef.current[row][i].classList.add("bg-green-800");
-        } else if (wordToGuess.includes(formedWord[i])) {
-          inputsRef.current[row][i].classList.remove("bg-transparent");
-          inputsRef.current[row][i].classList.add("bg-yellow-800");
-          allCorrect = false;
-        } else {
-          inputsRef.current[row][i].classList.remove("bg-transparent");
-          inputsRef.current[row][i].classList.add("bg-gray-500");
-          allCorrect = false;
-        }
-      }
-
-      if (allCorrect && formedWord === wordToGuess) {
-        setShowWinModal(true);
-        setGameComplete(true);
-      } else if (row === 5 && formedWord !== wordToGuess) {
-        setShowLoseModal(true);
-        setGameComplete(true);
-      } else if (row < 5) {
-        // Disable the current row
+        // Check the formed word against the pre-defined word
+        let allCorrect = true;
         for (let i = 0; i < 5; i++) {
-          inputsRef.current[row][i].disabled = true;
+          if (formedWord[i] === wordToGuess[i]) {
+            inputsRef.current[row][i].classList.remove("bg-transparent");
+            inputsRef.current[row][i].classList.add("bg-green-800");
+          } else if (wordToGuess.includes(formedWord[i])) {
+            inputsRef.current[row][i].classList.remove("bg-transparent");
+            inputsRef.current[row][i].classList.add("bg-yellow-800");
+            allCorrect = false;
+          } else {
+            inputsRef.current[row][i].classList.remove("bg-transparent");
+            inputsRef.current[row][i].classList.add("bg-gray-500");
+            allCorrect = false;
+          }
         }
-        // Enable the next row and focus on the first input of the next row
-        for (let i = 0; i < 5; i++) {
-          inputsRef.current[row + 1][i].disabled = false;
+
+        if (allCorrect && formedWord === wordToGuess) {
+          setShowWinModal(true);
+          setGameComplete(true);
+        } else if (row === 5 && formedWord !== wordToGuess) {
+          setShowLoseModal(true);
+          setGameComplete(true);
+        } else if (row < 5) {
+          // Disable the current row
+          for (let i = 0; i < 5; i++) {
+            inputsRef.current[row][i].disabled = true;
+          }
+          // Enable the next row and focus on the first input of the next row
+          for (let i = 0; i < 5; i++) {
+            inputsRef.current[row + 1][i].disabled = false;
+          }
+          inputsRef.current[row + 1][0].focus();
+          setCurrentRow(row + 1);
         }
-        inputsRef.current[row + 1][0].focus();
-        setCurrentRow(row + 1);
+      } else {
+        alert("Word is not in the library")
       }
     }
   };
@@ -209,9 +232,9 @@ export default function Game() {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-b from-slate-900 to-slate-700 w-screen h-screen">
+    <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 w-screen h-screen">
       {showWinModal && (
-        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
+        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute poppins">
           <h1 className="text-3xl text-center">
             Congrats! You guessed the word! The word is {wordToGuess}
           </h1>
@@ -220,7 +243,7 @@ export default function Game() {
             <h2>Loss: {userCurrentLoss}</h2>
             <h2>Streak: {userCurrentStreak}</h2>
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4 poppins">
             <button
               onClick={resetGame}
               className="px-4 py-2 bg-green-500 rounded-xl"
@@ -237,7 +260,7 @@ export default function Game() {
         </div>
       )}
       {showLoseModal && (
-        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute">
+        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute poppins">
           <h1 className="text-3xl text-center">
             Aww, You failed to guess the word! The word is {wordToGuess}
           </h1>
@@ -246,7 +269,7 @@ export default function Game() {
             <h2>Loss: {userCurrentLoss}</h2>
             <h2>Streak: 0</h2>
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4 poppins">
             <button
               onClick={resetGame}
               className="px-4 py-2 bg-green-500 rounded-xl"
@@ -266,14 +289,14 @@ export default function Game() {
         <h1 className="text-center text-4xl md:text-6xl text-slate-50 poppins">
           Wordle Plus
         </h1>
-        <div className="grid grid-rows-6 gap-3 mx-auto w-11/12 xs:w-10/12 sm:w-9/12">
+        <div className="grid grid-rows-6 gap-3 mx-auto w-11/12 xs:w-10/12 sm:w-9/12 md:w-2/3 lg:w-1/2 xl:w-2/5">
           {[...Array(6)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-3">
               {[...Array(5)].map((_, colIndex) => (
                 <input
                   key={colIndex}
                   type="text"
-                  className="text-2xl h-20 text-slate-50 border bg-transparent p-1 block text-center uppercase"
+                  className="text-2xl  h-20 text-slate-50 border bg-transparent p-1 block text-center uppercase"
                   maxLength="1"
                   onInput={() => handleInput(rowIndex, colIndex)}
                   onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
@@ -289,7 +312,7 @@ export default function Game() {
             </div>
           ))}
         </div>
-        <div className="flex justify-end px-3 space-x-3">
+        <div className="flex justify-end px-3 space-x-3 poppins">
           <button
             className="bg-slate-200 px-4 py-2 rounded-xl"
             onClick={resetGame}
@@ -305,7 +328,7 @@ export default function Game() {
             </button>
           )}
         </div>
-        <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl" onClick={() => navigate('/')}>Back</button>
+        <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl poppins border hover:bg-slate-800" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );

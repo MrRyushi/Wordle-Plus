@@ -32,7 +32,8 @@ export const Leaderboards = () => {
     <div className="flex justify-center items-center py-20">
       <div className="space-y-10">
         <h1 className="text-black text-7xl poppins text-center">Leaderboards</h1>
-        <div className="grid grid-cols-4 text-center text-3xl font-bold">
+        <div className="grid grid-cols-5 text-center text-3xl font-bold">
+          <h3>Rank</h3>
           <h3>Username</h3>
           <h3>Wins</h3>
           <h3>Streak</h3>
@@ -40,7 +41,8 @@ export const Leaderboards = () => {
         </div>
         <div>
           {users.map((user, index) => (
-            <div key={index} className="grid grid-cols-4 text-3xl text-center">
+            <div key={index} className="grid grid-cols-5 text-3xl text-center">
+              <p>{index+1}</p>
               <p className="uppercase">{user.username}</p>
               <p>{user.wins}</p>
               <p>{user.streak}</p>
