@@ -66,6 +66,12 @@ app.get('/api/word', (req, res) => {
   console.log("Word:" + word)
   res.json({ word });
 });
+
+app.get('/api/words', (req, res) => {
+  const filePath = path.join(__dirname, '../wordle/src/assets/library.txt'); // Update with the correct path to your text file
+  const words = fs.readFileSync(filePath, 'utf8').split('\n');
+  return words;
+})
 /*
 // Routes
 app.post('/api/register', (req, res) => {

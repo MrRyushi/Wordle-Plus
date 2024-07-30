@@ -17,7 +17,7 @@ export default function Home() {
 				<div className='flex gap-3 justify-center items-center poppins'>
 					<button className='border rounded-2xl px-3 py-2 hover:bg-slate-200 text-lg w-1/3' onClick={() => navigate('/about')}>How to play</button>
 					<button className='border rounded-2xl px-3 py-2 hover:bg-slate-200 text-lg w-1/3' onClick={() => navigate('/login')}>Log in</button>
-					<button className='border rounded-2xl px-3 py-2 bg-slate-900 text-slate-50 hover:bg-slate-950 text-lg w-1/3' onClick={() => navigate('/game')}>Play</button>
+					<button className='border rounded-2xl px-3 py-2 bg-yellow-900 text-slate-50 hover:bg-slate-950 text-lg w-1/3' onClick={() => navigate('/leaderboards')}>Leaderboards</button>
 				</div>
 			</div>
 		</div>

@@ -5,6 +5,7 @@ import About from './About'
 import Login from './Login'
 import Register from './Register'
 import Game from './Game'
+import { Leaderboards } from './Leaderboards'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
 				<Route path='/login' element={<Login />}/>
 				<Route path='/register' element={<Register />}/>
 				<Route path='/game' element={<Game />}/>
+				<Route path='/leaderboards' element={<Leaderboards />}/>
 			</Routes>
 		</BrowserRouter>
     </>

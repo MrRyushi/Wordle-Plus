@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Game() {
   const inputsRef = useRef([]);
+  // guessing
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
@@ -17,9 +18,9 @@ export default function Game() {
   const [userCurrentWins, setUserCurrentWins] = useState(0);
   const [userCurrentLoss, setUserCurrentLoss] = useState(0);
   const [userCurrentStreak, setUserCurrentStreak] = useState(0);
-
+  // user
   const [uid, setUID] = useState("");
-
+  // navigate
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -304,6 +305,7 @@ export default function Game() {
             </button>
           )}
         </div>
+        <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );
