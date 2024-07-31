@@ -59,7 +59,7 @@ export default function Login() {
   };
 
   return (
-    <div className="w-screen h-screen bg-slate-50 flex justify-center items-center poppins">
+    <div className="w-screen h-screen bg-slate-50 flex justify-center items-center poppins overflow-hidden">
       {showPasswordResetModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute border-2 drop-shadow-2xl shadow-2xl">
           <h1 className="text-3xl text-center">

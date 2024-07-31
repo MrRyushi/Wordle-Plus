@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-slate-50">
-      <div className="px-3">
+      <div className="px-7">
         <div>
           <img src={logo} />
         </div>
