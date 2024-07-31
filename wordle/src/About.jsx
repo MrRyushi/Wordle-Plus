@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom'
 export default function About() {
   const navigate = useNavigate()
   return (
-    <div className="w-screen flex justify-center bg-slate-50 h-auto px-8 xs:px-12 sm:px-24 md:px-36 lg:px-48 xl:px-64 2xl:px-72 py-16 md:py-32 poppins">
+    <div className="w-screen md:h-screen flex justify-center bg-slate-50 h-auto px-8 xs:px-12 sm:px-24 md:px-36 lg:px-48 xl:px-64 2xl:px-72 py-16 md:py-40 poppins">
       <div className="space-y-12">
-        <div className="space-y-3">
+        <div className="">
           <h1 className="poppins text-slate-950 teext-center text-5xl">How to Play</h1>
-          <h3 className="text-2xl">Guess the word in 6 tries</h3>
-          <div className="space-y-1 text-xl">
+          <h3 className="text-2xl mt-8">Guess the word in 6 tries</h3>
+          <div className="space-y-1 text-xl mt-2">
             <h4>• Each guess must be a valid 5-letter word</h4>
             <h4>• The color of the tiles will change to show how close your guess was to the word</h4>
           </div>
-          <div className="space-y-2 text-xl">
+          <div className="space-y-2 text-xl mt-3">
             <h4>Examples</h4>
             <div>
               <div className="flex space-x-2">

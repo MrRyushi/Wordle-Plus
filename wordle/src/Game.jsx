@@ -253,25 +253,25 @@ export default function Game() {
   return (
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 h-auto py-12 overflow-x-hidden">
       {showWinModal && (
-        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute poppins">
-          <h1 className="text-3xl text-center">
-            Congrats! You guessed the word! The word is {wordToGuess}
+        <div className="md:w-1/2 bg-slate-50 mx-10 md:mx-auto p-12 rounded-xl space-y-6 absolute poppins">
+          <h1 className="text-xl md:text-3xl text-center">
+            Congrats! You guessed the word! The word is <span className="text-yellow-800 font-bold">{wordToGuess}</span>
           </h1>
           <div className="flex justify-center gap-x-3">
             <h2>Wins: {userCurrentWins}</h2>
             <h2>Loss: {userCurrentLoss}</h2>
             <h2>Streak: {userCurrentStreak}</h2>
           </div>
-          <div className="flex justify-end space-x-4 poppins">
+          <div className="flex justify-center space-x-4 poppins">
             <button
               onClick={resetGame}
-              className="px-4 py-2 bg-green-500 rounded-xl"
+              className="px-4 py-2 text-sm md:text-base bg-green-400 rounded-xl"
             >
               Reset
             </button>
             <button
               onClick={() => setShowWinModal(false)}
-              className="px-4 py-2 bg-red-500 rounded-xl"
+              className="px-4 py-2 text-sm md:text-base bg-red-400 rounded-xl"
             >
               Close
             </button>
@@ -279,25 +279,25 @@ export default function Game() {
         </div>
       )}
       {showLoseModal && (
-        <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute poppins">
-          <h1 className="text-3xl text-center">
-            Aww, You failed to guess the word! The word is {wordToGuess}
+        <div className="md:w-1/2 bg-slate-50 mx-10 md:mx-auto p-12 rounded-xl space-y-6 absolute poppins">
+          <h1 className="text-xl md:text-3xl text-center">
+            Aww, You failed to guess the word! The word is <span className="text-yellow-800 font-bold">{wordToGuess}</span>
           </h1>
           <div className="flex justify-center gap-x-3">
             <h2>Wins: {userCurrentWins}</h2>
             <h2>Loss: {userCurrentLoss}</h2>
             <h2>Streak: 0</h2>
           </div>
-          <div className="flex justify-end space-x-4 poppins">
+          <div className="flex justify-center space-x-4 poppins">
             <button
               onClick={resetGame}
-              className="px-4 py-2 bg-green-500 rounded-xl"
+              className="px-4 py-2 text-sm md:text-base bg-green-400 rounded-xl"
             >
               Reset
             </button>
             <button
               onClick={() => setShowLoseModal(false)}
-              className="px-4 py-2 bg-red-500 rounded-xl"
+              className="px-4 py-2 text-sm md:text-base bg-red-400 rounded-xl"
             >
               Close
             </button>
@@ -329,65 +329,57 @@ export default function Game() {
           ))}
         </div>
         <div className="space-y-3">
-          <div className="flex justify-center gap-x-2">
-            <button id="Q" className="text-2xl p-2 rounded-md bg-gray-500 text-white">Q</button>
-            <button id="W" className="text-2xl p-2 rounded-md bg-gray-500 text-white">W</button>
-            <button id="E" className="text-2xl p-2 rounded-md bg-gray-500 text-white">E</button>
-            <button id="R" className="text-2xl p-2 rounded-md bg-gray-500 text-white">R</button>
-            <button id="T" className="text-2xl p-2 rounded-md bg-gray-500 text-white">T</button>
-            <button id="Y" className="text-2xl p-2 rounded-md bg-gray-500 text-white">Y</button>
-            <button id="U" className="text-2xl p-2 rounded-md bg-gray-500 text-white">U</button>
-            <button id="I" className="text-2xl p-2 rounded-md bg-gray-500 text-white">I</button>
-            <button id="O" className="text-2xl p-2 rounded-md bg-gray-500 text-white">O</button>
-            <button id="P" className="text-2xl p-2 rounded-md bg-gray-500 text-white">P</button>
+          <div className="flex justify-center gap-x-1 sm:gap-x-2">
+            <button id="Q" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">Q</button>
+            <button id="W" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">W</button>
+            <button id="E" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">E</button>
+            <button id="R" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">R</button>
+            <button id="T" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">T</button>
+            <button id="Y" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">Y</button>
+            <button id="U" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">U</button>
+            <button id="I" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">I</button>
+            <button id="O" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">O</button>
+            <button id="P" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">P</button>
           </div>
-          <div className="flex justify-center gap-x-2">
-            <button id="A" className="text-2xl p-2 rounded-md bg-gray-500 text-white">A</button>
-            <button id="S" className="text-2xl p-2 rounded-md bg-gray-500 text-white">S</button>
-            <button id="D" className="text-2xl p-2 rounded-md bg-gray-500 text-white">D</button>
-            <button id="F" className="text-2xl p-2 rounded-md bg-gray-500 text-white">F</button>
-            <button id="G" className="text-2xl p-2 rounded-md bg-gray-500 text-white">G</button>
-            <button id="H" className="text-2xl p-2 rounded-md bg-gray-500 text-white">H</button>
-            <button id="J" className="text-2xl p-2 rounded-md bg-gray-500 text-white">J</button>
-            <button id="K" className="text-2xl p-2 rounded-md bg-gray-500 text-white">K</button>
-            <button id="L" className="text-2xl p-2 rounded-md bg-gray-500 text-white">L</button>
+          <div className="flex justify-center gap-x-1 sm:gap-x-2">
+            <button id="A" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">A</button>
+            <button id="S" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">S</button>
+            <button id="D" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">D</button>
+            <button id="F" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">F</button>
+            <button id="G" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">G</button>
+            <button id="H" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">H</button>
+            <button id="J" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">J</button>
+            <button id="K" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">K</button>
+            <button id="L" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">L</button>
           </div>
-          <div className="flex justify-center gap-x-2">
+          <div className="flex justify-center gap-x-1 sm:gap-x-2">
             {/*<button id="Enter" className="text-lg p-2 rounded-md bg-gray-500 text-white">Enter</button>*/}
-            <button id="Z" className="text-2xl p-2 rounded-md bg-gray-500 text-white">Z</button>
-            <button id="X" className="text-2xl p-2 rounded-md bg-gray-500 text-white">X</button>
-            <button id="C" className="text-2xl p-2 rounded-md bg-gray-500 text-white">C</button>
-            <button id="V" className="text-2xl p-2 rounded-md bg-gray-500 text-white">V</button>
-            <button id="B" className="text-2xl p-2 rounded-md bg-gray-500 text-white">B</button>
-            <button id="N" className="text-2xl p-2 rounded-md bg-gray-500 text-white">N</button>
-            <button id="M" className="text-2xl p-2 rounded-md bg-gray-500 text-white">M</button>
+            <button id="Z" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">Z</button>
+            <button id="X" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">X</button>
+            <button id="C" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">C</button>
+            <button id="V" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">V</button>
+            <button id="B" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">B</button>
+            <button id="N" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">N</button>
+            <button id="M" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">M</button>
             {/*<button id="Erase" className="text-lg p-2 rounded-md bg-gray-500 text-white">Erase</button>*/}
           </div>
 
         </div>
-        <div className="flex justify-end px-3 space-x-3 poppins">
+        <div className="flex justify-center md:justify-end px-3 space-x-3 poppins">
           <button
-            className="bg-slate-200 px-4 py-2 rounded-xl"
+            className="bg-slate-200 px-4 py-2 rounded-xl text-sm md:text-base"
             onClick={resetGame}
           >
             Reset
           </button>
           <button
-            className="bg-yellow-900 px-4 py-2 rounded-xl"
+            className="bg-yellow-500 px-4 py-2 rounded-xl text-sm md:text-base"
             onClick={() => navigate('/leaderboards')}
           >
             Leaderboards
           </button>
-          {uid && (
-            <button
-              className="bg-red-300 px-4 py-2 rounded-xl"
-              onClick={() => handleLogout()}
-            >
-              Logout
-            </button>
-          )}
         </div>
-        <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl poppins border hover:bg-slate-800" onClick={() => navigate('/')}>Back</button>
+        <button className="text-sm md:text-xl py-2 px-6 mx-auto sm:mx-0 block bg-slate-900 text-slate-50 rounded-xl poppins border hover:bg-slate-800" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );

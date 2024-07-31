@@ -129,6 +129,7 @@ export default function Register() {
             </button>
           </div>
         </div>
+        <button className="text-centers block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );

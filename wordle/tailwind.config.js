@@ -44,7 +44,10 @@ export default withMT ({
           800: 'rgb(31, 41, 55)',
           900: 'rgb(17, 24, 39)',
           950: 'rgb(3, 7, 18)',
-        }
+        },
+        'leaderboard-color1': '#17153B',
+        'leaderboard-color2': '#2E236C',
+        'leaderboard-color3': '#433D8B',
       },
     },
   },

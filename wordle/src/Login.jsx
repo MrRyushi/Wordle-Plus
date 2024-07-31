@@ -128,19 +128,20 @@ export default function Login() {
           </form>
           <div className="flex justify-between items-center w-2/3 mx-auto">
             <button
-              className="text-gray-400 text-sm hover:underline underline-offset-4"
+              className="text-gray-400 text-xs md:text-sm hover:underline underline-offset-4"
               onClick={() => setShowEmailInput(true)}
             >
               Forgot password?
             </button>
             <button
-              className="text-gray-400 text-sm hover:underline underline-offset-4"
+              className="text-gray-400 text-xs md:text-sm hover:underline underline-offset-4"
               onClick={() => navigate("/register")}
             >
               Don't have an account?
             </button>
           </div>
         </div>
+        <button className="text-centers block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );
