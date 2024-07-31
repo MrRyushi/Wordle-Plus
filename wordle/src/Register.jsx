@@ -59,11 +59,11 @@ export default function Register() {
 
   return (
     <div className="w-screen h-screen bg-slate-50 flex justify-center items-center poppins">
-      <div className="">
-        <div className="w-2/3 mx-auto">
-          <img src={logo} alt="Logo" />
+      <div className="px-8 md:px-44 lg:px-72 xl:w-2/3">
+        <div className=" mx-auto block">
+          <img src={logo} className="mx-auto"/>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 3xl:w-1/2 mx-auto">
           <h1 className="text-2xl text-center">Register</h1>
           {successMessage === "" ? null : (
             <h1 className="text-center text-green-600">{successMessage}</h1>
@@ -80,7 +80,7 @@ export default function Register() {
                 type="text"
                 name="username"
                 placeholder="Username"
-                className="rounded-lg p-2 block w-2/3 mx-auto bg-slate-50 border border-black"
+                className="rounded-lg p-2 block w-full mx-auto bg-slate-50 border border-black"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -89,7 +89,7 @@ export default function Register() {
                 type="email"
                 name="email"
                 placeholder="Email"
-                className="rounded-lg p-2 block w-2/3 mx-auto bg-slate-50 border border-black"
+                className="rounded-lg p-2 block w-full mx-auto bg-slate-50 border border-black"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -98,7 +98,7 @@ export default function Register() {
                 type="password"
                 name="password"
                 placeholder="Password"
-                className="rounded-lg p-2 block w-2/3 mx-auto bg-slate-50 border border-black"
+                className="rounded-lg p-2 block w-full mx-auto bg-slate-50 border border-black"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -107,20 +107,20 @@ export default function Register() {
                 type="password"
                 name="password"
                 placeholder="Confirm Password"
-                className="rounded-lg p-2 block w-2/3 mx-auto bg-slate-50 border border-black"
+                className="rounded-lg p-2 block w-full mx-auto bg-slate-50 border border-black"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
               <button
-                className="mx-auto px-4 py-2 block rounded-lg bg-green-700 hover:bg-green-600 text-slate-50 w-2/3"
+                className="mx-auto px-4 py-2 block rounded-lg bg-green-700 hover:bg-green-600 text-slate-50 w-full"
                 type="submit"
               >
                 Register
               </button>
             </form>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center mx-auto">
             <button
               className="text-gray-400 text-sm hover:underline underline-offset-4"
               onClick={() => navigate("/login")}
@@ -129,7 +129,7 @@ export default function Register() {
             </button>
           </div>
         </div>
-        <button className="text-centers block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
+        <button className="text-center text-sm md:text-base block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );

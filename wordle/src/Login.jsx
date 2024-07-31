@@ -91,11 +91,11 @@ export default function Login() {
         </div>
       )}
 
-      <div className="">
-        <div className="w-2/3 mx-auto">
-          <img src={logo} />
+      <div className="px-8 md:px-44 lg:px-72 xl:w-2/3">
+        <div className=" mx-auto block">
+          <img src={logo} className="mx-auto"/>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 3xl:w-1/2 mx-auto">
           <h1 className="text-2xl text-center">Login</h1>
           {message == "" ? (
             <></>
@@ -108,7 +108,7 @@ export default function Login() {
                 type="email"
                 placeholder="Email"
                 name="email"
-                className="rounded-lg p-2 block w-2/3 mx-auto bg-slate-50 border border-black"
+                className="rounded-lg p-2 block mx-auto bg-slate-50 border border-black w-full"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
@@ -116,17 +116,17 @@ export default function Login() {
               <input
                 type="password"
                 placeholder="Password"
-                className="rounded-lg p-2 block w-2/3 mx-auto bg-slate-50 border border-black"
+                className="rounded-lg p-2 block mx-auto bg-slate-50 border border-black w-full"
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 value={password}
               />
             </div>
-            <button className="mx-auto px-4 py-2 block rounded-lg bg-green-700 hover:bg-green-600 text-slate-50 w-2/3 ">
+            <button className="mx-auto px-4 py-2 block rounded-lg bg-green-700 hover:bg-green-600 text-slate-50 w-full ">
               Log in
             </button>
           </form>
-          <div className="flex justify-between items-center w-2/3 mx-auto">
+          <div className="flex justify-between items-center mx-auto">
             <button
               className="text-gray-400 text-xs md:text-sm hover:underline underline-offset-4"
               onClick={() => setShowEmailInput(true)}
@@ -141,7 +141,7 @@ export default function Login() {
             </button>
           </div>
         </div>
-        <button className="text-centers block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
+        <button className="text-center text-sm md:text-base block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );

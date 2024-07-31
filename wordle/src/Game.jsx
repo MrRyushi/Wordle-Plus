@@ -145,6 +145,8 @@ export default function Game() {
     }
   };
 
+
+
   useEffect(() => {
     if (gameComplete) {
       handleGameComplete();
@@ -250,6 +252,90 @@ export default function Game() {
       });
   };
 
+  const handleEnter = (row) => {
+    let formedWord = "";
+    for (let i = 0; i < 5; i++) {
+      formedWord += inputsRef.current[row][i].value.toUpperCase();
+    }
+    if (wordsLibrary.includes(formedWord.toLowerCase())) {
+      const newWords = [...words];
+      newWords[row] = formedWord;
+      setWords(newWords);
+
+      let allCorrect = true;
+      for (let i = 0; i < 5; i++) {
+        if (formedWord[i] === wordToGuess[i]) {
+          inputsRef.current[row][i].classList.remove("bg-transparent");
+          inputsRef.current[row][i].classList.add("bg-green-800");
+          const letter = inputsRef.current[row][i].value.toUpperCase();
+          const button = document.getElementById(letter);
+          button.classList.add("bg-green-800");
+        } else if (wordToGuess.includes(formedWord[i])) {
+          inputsRef.current[row][i].classList.remove("bg-transparent");
+          inputsRef.current[row][i].classList.add("bg-yellow-800");
+          allCorrect = false;
+        } else {
+          inputsRef.current[row][i].classList.remove("bg-transparent");
+          inputsRef.current[row][i].classList.add("bg-gray-500");
+          allCorrect = false;
+          const letter = inputsRef.current[row][i].value.toUpperCase();
+          const button = document.getElementById(letter);
+          button.classList.add("bg-gray-900");
+          button.disabled = true;
+        }
+      }
+
+      if (allCorrect && formedWord === wordToGuess) {
+        setShowWinModal(true);
+        setGameComplete(true);
+      } else if (row === 5 && formedWord !== wordToGuess) {
+        setShowLoseModal(true);
+        setGameComplete(true);
+      } else if (row < 5) {
+        for (let i = 0; i < 5; i++) {
+          inputsRef.current[row][i].disabled = true;
+        }
+        for (let i = 0; i < 5; i++) {
+          inputsRef.current[row + 1][i].disabled = false;
+        }
+        inputsRef.current[row + 1][0].focus();
+        setCurrentRow(row + 1);
+      }
+    } else {
+      alert("Word is not in the library");
+    }
+  };
+
+  const handleErase = () => {
+    const row = currentRow;
+    const col = words[row].length;
+    if (col > 0) {
+      const newWords = [...words];
+      newWords[row] = newWords[row].slice(0, -1);
+      setWords(newWords);
+      inputsRef.current[row][col - 1].value = "";
+      inputsRef.current[row][col - 1].focus();
+    }
+  };
+
+  const handleButtonClick = (letter) => {
+    if (letter === "Enter") {
+      handleEnter(currentRow);
+    } else if (letter === "Erase") {
+      handleErase();
+    } else {
+      const row = currentRow;
+      const col = words[row].length;
+      if (col < 5) {
+        inputsRef.current[row][col].value = letter;
+        const newWords = [...words];
+        newWords[row] = newWords[row] + letter;
+        setWords(newWords);
+        handleInput(row, col);
+      }
+    }
+  };
+
   return (
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 h-auto py-12 overflow-x-hidden">
       {showWinModal && (
@@ -330,38 +416,38 @@ export default function Game() {
         </div>
         <div className="space-y-3">
           <div className="flex justify-center gap-x-1 sm:gap-x-2">
-            <button id="Q" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">Q</button>
-            <button id="W" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">W</button>
-            <button id="E" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">E</button>
-            <button id="R" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">R</button>
-            <button id="T" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">T</button>
-            <button id="Y" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">Y</button>
-            <button id="U" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">U</button>
-            <button id="I" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">I</button>
-            <button id="O" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">O</button>
-            <button id="P" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">P</button>
+            <button id="Q" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('Q')}>Q</button>
+            <button id="W" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('W')}>W</button>
+            <button id="E" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('E')}>E</button>
+            <button id="R" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('R')}>R</button>
+            <button id="T" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('T')}>T</button>
+            <button id="Y" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('Y')}>Y</button>
+            <button id="U" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('U')}>U</button>
+            <button id="I" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('I')}>I</button>
+            <button id="O" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('O')}>O</button>
+            <button id="P" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('P')}>P</button>
           </div>
           <div className="flex justify-center gap-x-1 sm:gap-x-2">
-            <button id="A" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">A</button>
-            <button id="S" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">S</button>
-            <button id="D" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">D</button>
-            <button id="F" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">F</button>
-            <button id="G" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">G</button>
-            <button id="H" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">H</button>
-            <button id="J" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">J</button>
-            <button id="K" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">K</button>
-            <button id="L" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">L</button>
+            <button id="A" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('A')}>A</button>
+            <button id="S" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('S')}>S</button>
+            <button id="D" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('D')}>D</button>
+            <button id="F" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('F')}>F</button>
+            <button id="G" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('G')}>G</button>
+            <button id="H" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('H')}>H</button>
+            <button id="J" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('J')}>J</button>
+            <button id="K" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('K')}>K</button>
+            <button id="L" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('L')}>L</button>
           </div>
           <div className="flex justify-center gap-x-1 sm:gap-x-2">
-            {/*<button id="Enter" className="text-lg p-2 rounded-md bg-gray-500 text-white">Enter</button>*/}
-            <button id="Z" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">Z</button>
-            <button id="X" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">X</button>
-            <button id="C" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">C</button>
-            <button id="V" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">V</button>
-            <button id="B" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">B</button>
-            <button id="N" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">N</button>
-            <button id="M" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white">M</button>
-            {/*<button id="Erase" className="text-lg p-2 rounded-md bg-gray-500 text-white">Erase</button>*/}
+            <button id="Enter" className="text-lg p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick("Enter")}>Enter</button>
+            <button id="Z" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('Z')}>Z</button>
+            <button id="X" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('X')}>X</button>
+            <button id="C" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('C')}>C</button>
+            <button id="V" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('V')}>V</button>
+            <button id="B" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('B')}>B</button>
+            <button id="N" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('N')}>N</button>
+            <button id="M" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('M')}>M</button>
+            <button id="Erase" className="text-lg p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick("Erase")}>Erase</button>
           </div>
 
         </div>

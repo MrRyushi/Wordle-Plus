@@ -49,6 +49,16 @@ export default withMT ({
         'leaderboard-color2': '#2E236C',
         'leaderboard-color3': '#433D8B',
       },
+
+      screens: {
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        '3xl': '1920px',
+        '4xl': '2560px', // Custom breakpoint for 4xl screen size
+      },
     },
   },
   plugins: [],

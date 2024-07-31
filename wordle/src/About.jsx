@@ -33,7 +33,7 @@ export default function About() {
                 <h5 className="border-2 w-max p-2">L</h5>
                 <h5 className="border-2 w-max p-2">S</h5>
               </div>
-              <h5><span className="font-bold">P</span> is in the word but in the wrong spot</h5>
+              <h5><span className="font-bold">I</span> is in the word but in the wrong spot</h5>
             </div>
 
             <div>
