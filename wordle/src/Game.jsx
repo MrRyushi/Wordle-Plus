@@ -337,7 +337,7 @@ export default function Game() {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 h-auto py-12 overflow-x-hidden">
+    <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 md:h-auto py-20 md:py-12 overflow-x-hidden">
       {showWinModal && (
         <div className="md:w-1/2 bg-slate-50 mx-10 md:mx-auto p-12 rounded-xl space-y-6 absolute poppins">
           <h1 className="text-xl md:text-3xl text-center">
@@ -398,7 +398,7 @@ export default function Game() {
                 <input
                   key={colIndex}
                   type="text"
-                  className="text-2xl  h-20 text-slate-50 border bg-transparent p-1 block text-center uppercase"
+                  className="text-2xl h-16 md:h-20 text-slate-50 border bg-transparent p-1 block text-center uppercase"
                   maxLength="1"
                   onInput={() => handleInput(rowIndex, colIndex)}
                   onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
