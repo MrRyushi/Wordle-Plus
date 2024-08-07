@@ -105,13 +105,16 @@ export default function Game() {
             inputsRef.current[row][i].classList.add("bg-green-800");
             const letter = inputsRef.current[row][i].value.toUpperCase();
             const button = document.getElementById(letter);
-            button.classList.add("bg-green-800")
+            button.classList.remove("bg-yellow-800");
+            button.classList.remove("bg-gray-900");
+            button.classList.add("bg-green-800");
           } else if (wordToGuess.includes(formedWord[i])) {
             inputsRef.current[row][i].classList.remove("bg-transparent");
             inputsRef.current[row][i].classList.add("bg-yellow-800");
             allCorrect = false;
             const letter = inputsRef.current[row][i].value.toUpperCase();
             const button = document.getElementById(letter);
+            button.classList.remove("bg-gray-900");
             button.classList.add("bg-yellow-800")
           } else {
             inputsRef.current[row][i].classList.remove("bg-transparent");
@@ -272,11 +275,17 @@ export default function Game() {
           inputsRef.current[row][i].classList.add("bg-green-800");
           const letter = inputsRef.current[row][i].value.toUpperCase();
           const button = document.getElementById(letter);
+          button.classList.remove("bg-yellow-800");
+          button.classList.remove("bg-gray-900");
           button.classList.add("bg-green-800");
         } else if (wordToGuess.includes(formedWord[i])) {
           inputsRef.current[row][i].classList.remove("bg-transparent");
           inputsRef.current[row][i].classList.add("bg-yellow-800");
           allCorrect = false;
+          const letter = inputsRef.current[row][i].value.toUpperCase();
+          const button = document.getElementById(letter);
+          button.classList.remove("bg-gray-900");
+          button.classList.add("bg-yellow-800");
         } else {
           inputsRef.current[row][i].classList.remove("bg-transparent");
           inputsRef.current[row][i].classList.add("bg-gray-500");
