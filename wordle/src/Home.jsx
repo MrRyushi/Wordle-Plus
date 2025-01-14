@@ -1,21 +1,26 @@
 import logo from "./assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
   const auth = getAuth();
-  const user = auth.currentUser;
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      setIsSignedIn(true);
-    } else {
-      setIsSignedIn(false);
-    }
-  }, [user]);
+    // Set up an auth state listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsSignedIn(true);
+      } else {
+        setIsSignedIn(false);
+      }
+    });
+
+    // Clean up the listener on component unmount
+    return () => unsubscribe();
+  }, [auth]);
 
   const handleLogout = () => {
     signOut(auth)
@@ -33,7 +38,7 @@ export default function Home() {
     <div className="w-screen h-screen flex justify-center items-center bg-slate-50">
       <div className="px-7">
         <div>
-          <img src={logo} />
+          <img src={logo} alt="Logo" />
         </div>
 
         <div className="space-y-4">
@@ -74,7 +79,10 @@ export default function Home() {
             )}
           </div>
           {isSignedIn && (
-            <button className="mx-auto block w-1/2 md:w-1/3 px-3 py-2 bg-slate-900 hover:bg-slate-950 rounded-2xl text-slate-50 text-sm md:text-lg poppins" onClick={() => navigate('/game')}>
+            <button
+              className="mx-auto block w-1/2 md:w-1/3 px-3 py-2 bg-slate-900 hover:bg-slate-950 rounded-2xl text-slate-50 text-sm md:text-lg poppins"
+              onClick={() => navigate("/game")}
+            >
               Back to Game
             </button>
           )}
