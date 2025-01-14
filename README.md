@@ -10,7 +10,6 @@ Wordle Plus! is a fun and interactive word-guessing game where players get six c
 2. [Prerequisites](#prerequisites)
 3. [Installation](#installation)
 4. [Running the Application](#running-the-application)
-5. [Available Scripts](#available-scripts)
 
 ---
 
@@ -51,7 +50,7 @@ Follow these steps to clone and install the repository locally:
     ```
 
 ## Running the Application
-1, **Start the development server**:
+1. **Start the development server**:
     ```bash
     npm start
     ```
