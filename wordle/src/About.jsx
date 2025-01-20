@@ -14,6 +14,7 @@ export default function About() {
           </div>
           <div className="space-y-2 text-xl mt-3">
             <h4>Examples</h4>
+            {/* TODO: Can be converted into functions that take in a word and split it */}
             <div>
               <div className="flex space-x-2">
                 <h5 className="bg-green-600 border-2 w-max p-2">W</h5>
@@ -48,6 +49,8 @@ export default function About() {
             </div>
           </div>
         </div>
+
+        {/* TODO Can be converted into a a singular botton with the rest of the Back buttons */}
         <button className="text-xl py-2 px-6 bg-slate-900 text-slate-50 rounded-xl" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>

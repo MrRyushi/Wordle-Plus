@@ -10,6 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     // Set up an auth state listener
+    // TODO: Consolidate into an auth state class?
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsSignedIn(true);
@@ -22,6 +23,7 @@ export default function Home() {
     return () => unsubscribe();
   }, [auth]);
 
+  // TODO: Can be consolidated into an auth helper class
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -50,18 +52,23 @@ export default function Home() {
           </h2>
 
           <div className="flex gap-3 justify-center items-center poppins">
+            {/* TODO: Consolidate into UI helper class */}
             <button
               className="border border-slate-400 rounded-2xl px-3 py-2 hover:bg-slate-200 text-sm md:text-lg w-1/3"
               onClick={() => navigate("/about")}
             >
               How to play
             </button>
+
+            {/* TODO: Consolidate into UI helper class */}
             <button
               className="border border-slate-400 rounded-2xl px-3 py-2 hover:bg-slate-200 text-sm md:text-lg w-1/3"
               onClick={() => navigate("/register")}
             >
               Register
             </button>
+
+            {/* TODO: Consolidate into UI helper class */}
             {isSignedIn ? (
               <button
                 className="border rounded-2xl px-3 py-2 bg-red-400 hover:bg-red-500 text-slate-50 text-sm md:text-lg w-1/3"
@@ -77,6 +84,7 @@ export default function Home() {
                 Log in
               </button>
             )}
+            
           </div>
           {isSignedIn && (
             <button

@@ -15,6 +15,7 @@ export const Leaderboards = () => {
 
   const navigate = useNavigate();
 
+  // TODO: Consolidate into a single database helper class
   useEffect(() => {
     async function getData() {
       const q = query(collection(db, "users"));
@@ -35,6 +36,8 @@ export const Leaderboards = () => {
     getData();
   }, []); // Empty dependency array to run once on component mount
 
+
+  // TODO: Consolidate into a single auth helper class
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -49,6 +52,7 @@ export const Leaderboards = () => {
     });
   });
 
+  // TODO: Consolidate into a single database helper class
   useEffect(() => {
     async function getUserData() {
       const docRef = doc(db, "users", uid);
@@ -65,6 +69,8 @@ export const Leaderboards = () => {
     getUserData();
   }, [uid]);
 
+
+  // TODO: Consolidate into a single database helper class
   useEffect(() => {
     for(let i = 0; i < users.length; i++){
       if(users[i].username === userStats.username){
@@ -112,6 +118,7 @@ export const Leaderboards = () => {
             </div>
           ))}
         </div>
+        {/* TODO: Consolidate into ui class back button */}
         <button
           className="text-base md:text-xl py-2 px-6 bg-leaderboard-color3 text-slate-50 rounded-xl mt-10"
           onClick={() => navigate("/game")}

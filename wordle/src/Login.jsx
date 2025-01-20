@@ -10,12 +10,18 @@ import { app } from "../firebase/firebase";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  // TODO: Consolidate into a single helper auth class?
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+
   const [message, setMessage] = useState("");
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
   const [showEmailInput, setShowEmailInput] = useState(false)
 
+
+  // TODO: Consolidate into a single helper auth class?
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -23,10 +29,8 @@ export default function Login() {
       const auth = getAuth(app);
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
           navigate("/game");
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -42,6 +46,8 @@ export default function Login() {
     }
   };
 
+
+  // TODO: Consolidate into a single helper auth class?
   const handleResetPassword = () => {
     setShowEmailInput(false)
     const auth = getAuth(app);
@@ -60,6 +66,7 @@ export default function Login() {
 
   return (
     <div className="w-screen h-screen bg-slate-50 flex justify-center items-center poppins overflow-hidden">
+
       {showPasswordResetModal && (
         <div className="w-1/2 bg-slate-50 mx-auto p-12 rounded-xl space-y-6 absolute border-2 drop-shadow-2xl shadow-2xl">
           <h1 className="text-3xl text-center">
@@ -141,6 +148,8 @@ export default function Login() {
             </button>
           </div>
         </div>
+
+        {/* Consolidate into a UI Class */}
         <button className="text-center text-sm md:text-base block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>

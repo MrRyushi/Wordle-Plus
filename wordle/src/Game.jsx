@@ -5,25 +5,44 @@ import { app, auth, db } from "../firebase/firebase"; // Ensure the correct path
 import { useNavigate } from "react-router-dom";
 
 export default function Game() {
+  // TODO: Consolidate into a helper game class?
   const inputsRef = useRef([]);
+
+
   // guessing
+
+  // TODO: Consolidate into a single helper game class?
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
   const [wordsLibrary, setWordsLibrary] = useState([])
+
+
   // modals
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
+
+
   // firebase / stats
+
+  // TODO: Consolidate into a single helper data base class?
   const [userCurrentWins, setUserCurrentWins] = useState(0);
   const [userCurrentLoss, setUserCurrentLoss] = useState(0);
   const [userCurrentStreak, setUserCurrentStreak] = useState(0);
+
+
   // user
+
+  // TODO: Consolidate into a single helper auth class?
   const [uid, setUID] = useState("");
+
+
   // navigate
   const navigate = useNavigate();
 
+
+  // TODO: Consolidate into a single helper auth class?
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -46,6 +65,7 @@ export default function Game() {
     });
   });
 
+  // TODO: Consolidate all API calls into a helper class
   useEffect(() => {
     fetch("https://backend-eosin-two.vercel.app/api/word")
       .then((response) => response.json())
@@ -54,6 +74,7 @@ export default function Game() {
       });
   }, []);
 
+  // TODO: Consolidate all API calls into a helper class
   useEffect(() => {
     fetch("https://backend-eosin-two.vercel.app/api/words")
       .then((response) => {
@@ -71,14 +92,16 @@ export default function Game() {
   }, []);
 
 
-
+  // TODO: Consolidate into a single helper game class?
   const handleInput = (row, col) => {
     if (inputsRef.current[row][col].value.length === 1 && col < 4) {
       inputsRef.current[row][col + 1].focus();
     }
   };
 
+  // TODO: Consolidate into a single helper game class?
   const handleKeyDown = (e, row, col) => {
+
     if (
       e.key === "Backspace" &&
       col > 0 &&
@@ -92,6 +115,7 @@ export default function Game() {
       for (let i = 0; i < 5; i++) {
         formedWord += inputsRef.current[row][i].value.toUpperCase();
       }
+
       if(wordsLibrary.includes(formedWord.toLowerCase())){
         const newWords = [...words];
         newWords[row] = formedWord;
@@ -159,6 +183,7 @@ export default function Game() {
     }
   }, [gameComplete]);
 
+  // TODO: Consolidate into a single helper game class?
   const handleGameComplete = () => {
     const auth = getAuth(app);
     onAuthStateChanged(auth, async (user) => {
@@ -201,7 +226,8 @@ export default function Game() {
       }
     });
   };
-
+ 
+  // TODO: Consolidate into a single helper game class?
   const resetGame = () => {
     // Clear all inputs and set the first row to be editable
     inputsRef.current.forEach((row, rowIndex) => {
@@ -245,6 +271,8 @@ export default function Game() {
       });
   };
 
+
+  // TODO: Consolidate into a single helper auth class?
   const handleLogout = () => {
     const auth = getAuth();
     signOut(auth)
@@ -258,6 +286,7 @@ export default function Game() {
       });
   };
 
+  // TODO: Consolidate into a single helper game class?
   const handleEnter = (row) => {
     let formedWord = "";
     for (let i = 0; i < 5; i++) {
@@ -318,6 +347,7 @@ export default function Game() {
     }
   };
 
+  // TODO: Consolidate into a single helper game class?
   const handleErase = () => {
     const row = currentRow;
     const col = words[row].length;
@@ -330,6 +360,8 @@ export default function Game() {
     }
   };
 
+
+  // TODO: Consolidate into a single helper game class?
   const handleButtonClick = (letter) => {
     if (letter === "Enter") {
       handleEnter(currentRow);
@@ -426,6 +458,7 @@ export default function Game() {
             </div>
           ))}
         </div>
+        {/* TODO: Consolidate into a UI Game Class */}
         <div className="space-y-3">
           <div className="flex justify-center gap-x-1 sm:gap-x-2">
             <button id="Q" className="sm:text-2xl p-2 rounded-md bg-gray-500 text-white" onClick={() => handleButtonClick('Q')}>Q</button>

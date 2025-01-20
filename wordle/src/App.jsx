@@ -7,6 +7,7 @@ import Register from './Register'
 import Game from './Game'
 import { Leaderboards } from './Leaderboards'
 
+// None
 function App() {
 
   return (

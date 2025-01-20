@@ -8,13 +8,17 @@ import { doc, setDoc } from "firebase/firestore";
 
 export default function Register() {
   const navigate = useNavigate();
+
+  // TODO: Consolidate into a single helper auth class?
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // TODO: Issue 1 [Too Long], Can be abstracted into helper functions for auth class
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
@@ -48,10 +52,7 @@ export default function Register() {
           } else {
             console.log(`Error: ${errorMessage}`);
           }
-
-          // ...
-        });
-      // ...
+        }); 
     } catch (error) {
       console.error("Error registering user:", error.message);
     }
@@ -129,6 +130,8 @@ export default function Register() {
             </button>
           </div>
         </div>
+
+        {/* Consolidate into a UI Class */}
         <button className="text-center text-sm md:text-base block px-4 py-2 rounded-lg bg-gray-200 text-slate-900 mt-14" onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
