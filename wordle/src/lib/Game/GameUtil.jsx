@@ -71,7 +71,7 @@ class GameUtil {
                     index === row ? word + letter : word
                 )
             );
-            moveInputIndex(row, col, words);
+            this.moveInputIndex(row, col, words);
         }
     }
 

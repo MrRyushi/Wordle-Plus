@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import DBHelper from "./lib/Data/DBHelper";
+import AuthHandler from "./lib/Auth/AuthHandler";
 
 const crown = <FontAwesomeIcon icon={faCrown} />;
 export const Leaderboards = () => {
@@ -15,68 +17,33 @@ export const Leaderboards = () => {
 
   const navigate = useNavigate();
 
-  // TODO: Consolidate into a single database helper class
   useEffect(() => {
-    async function getData() {
-      const q = query(collection(db, "users"));
-      const querySnapshot = await getDocs(q);
-      const array = [];
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.data());
-        array.push(doc.data());
-      });
+    async function fetchData() {
+      await DBHelper.getUsers(setUsers);  
+    }
+    fetchData();
+  }, []); 
 
-      // Sorting the array based on 'wins' in descending order
-      array.sort((a, b) => b.wins - a.wins);
+  useEffect(() => {
+    const fetchUID = async () => {
+      const uid = await AuthHandler.getUID();
+      setUID(uid);
+    };
 
-      setUsers(array);
+    fetchUID();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      await DBHelper.getUserDataByUID(uid, setUserStats);  // Call the helper method to get user data
     }
 
-    getData();
-  }, []); // Empty dependency array to run once on component mount
+    fetchData();
+  }, [uid, setUserStats]);
 
 
-  // TODO: Consolidate into a single auth helper class
   useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUID(uid);
-        // ...
-      } else {
-        // User is signed out
-        // ...
-      }
-    });
-  });
-
-  // TODO: Consolidate into a single database helper class
-  useEffect(() => {
-    async function getUserData() {
-      const docRef = doc(db, "users", uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        setUserStats(docSnap.data());
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    }
-    getUserData();
-  }, [uid]);
-
-
-  // TODO: Consolidate into a single database helper class
-  useEffect(() => {
-    for(let i = 0; i < users.length; i++){
-      if(users[i].username === userStats.username){
-        setUserRank(i+1);
-      }
-    }
+    DBHelper.setRanks(users, userStats, setUserRank);
   })
 
   return (

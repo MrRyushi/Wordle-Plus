@@ -2,6 +2,7 @@ import logo from "./assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
+import AuthHandler from "./lib/Auth/AuthHandler";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -9,8 +10,7 @@ export default function Home() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    // Set up an auth state listener
-    // TODO: Consolidate into an auth state class?
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsSignedIn(true);
@@ -19,22 +19,8 @@ export default function Home() {
       }
     });
 
-    // Clean up the listener on component unmount
     return () => unsubscribe();
   }, [auth]);
-
-  // TODO: Can be consolidated into an auth helper class
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("Logout successful");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        // An error happened.
-      });
-  };
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-slate-50">
@@ -52,7 +38,7 @@ export default function Home() {
           </h2>
 
           <div className="flex gap-3 justify-center items-center poppins">
-            {/* TODO: Consolidate into UI helper class */}
+
             <button
               className="border border-slate-400 rounded-2xl px-3 py-2 hover:bg-slate-200 text-sm md:text-lg w-1/3"
               onClick={() => navigate("/about")}
@@ -60,7 +46,7 @@ export default function Home() {
               How to play
             </button>
 
-            {/* TODO: Consolidate into UI helper class */}
+
             <button
               className="border border-slate-400 rounded-2xl px-3 py-2 hover:bg-slate-200 text-sm md:text-lg w-1/3"
               onClick={() => navigate("/register")}
@@ -68,11 +54,11 @@ export default function Home() {
               Register
             </button>
 
-            {/* TODO: Consolidate into UI helper class */}
+  
             {isSignedIn ? (
               <button
                 className="border rounded-2xl px-3 py-2 bg-red-400 hover:bg-red-500 text-slate-50 text-sm md:text-lg w-1/3"
-                onClick={handleLogout}
+                onClick={AuthHandler.logOut}
               >
                 Logout
               </button>

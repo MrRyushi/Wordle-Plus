@@ -1,7 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
-import { app, auth, db } from "../firebase/firebase"; // Ensure the correct path to your firebase.ts fileimport { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 import GameUtil from './lib/Game/GameUtil';
@@ -11,33 +8,21 @@ import GameInterface from "./lib/UI/GameInterface";
 
 
 export default function Game() {
-  // TODO: Consolidate into a helper game class?
   const inputsRef = useRef([]);
 
-  // TODO: Consolidate into a single helper game class?
   const [currentRow, setCurrentRow] = useState(0);
   const [words, setWords] = useState(Array(6).fill(""));
   const [wordToGuess, setWordToGuess] = useState("");
   const [wordsLibrary, setWordsLibrary] = useState([])
 
-
-  // modals
   const [showWinModal, setShowWinModal] = useState(false);
   const [showLoseModal, setShowLoseModal] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
 
-
-  // firebase / stats
-
-  // TODO: Consolidate into a single helper data base class?
   const [userCurrentWins, setUserCurrentWins] = useState(0);
   const [userCurrentLoss, setUserCurrentLoss] = useState(0);
   const [userCurrentStreak, setUserCurrentStreak] = useState(0);
 
-
-  // user
-
-  // TODO: Consolidate into a single helper auth class?
   const [uid, setUID] = useState("");
 
 
@@ -299,7 +284,6 @@ export default function Game() {
             </div>
           ))}
         </div>
-        {/* TODO: Consolidate into a UI Game Class */}
         <div className="space-y-3">
           <GameInterface.KeyboardUI handleButtonClick={handleButtonClick} />
         </div>

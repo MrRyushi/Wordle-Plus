@@ -53,6 +53,7 @@ class KeyboardUI extends Component {
     }
 }
 
+
 // Main GameInterface Class that encapsulates all subcomponents
 class GameInterface extends Component {
     render() {
