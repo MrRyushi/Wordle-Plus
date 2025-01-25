@@ -10,7 +10,7 @@ class GameUtil {
         return formedWord;
     }
     
-    static updateLetterIsCorrect(letter){
+    static #updateLetterIsCorrect(letter){
         letter.classList.remove("bg-transparent");
         letter.classList.add("bg-green-800");
         const letterValue = letter.value.toUpperCase();
@@ -20,7 +20,7 @@ class GameUtil {
         button.classList.add("bg-green-800");
     }
 
-    static updateLetterIsFound(letter){
+    static #updateLetterIsFound(letter){
         letter.classList.remove("bg-transparent");
         letter.classList.add("bg-yellow-800");
         const letterValue = letter.value.toUpperCase();
@@ -29,7 +29,7 @@ class GameUtil {
         button.classList.add("bg-yellow-800");
     }
 
-    static updateLetterIsNotFound(letter){
+    static #updateLetterIsNotFound(letter){
         letter.classList.remove("bg-transparent");
         letter.classList.add("bg-gray-500");
         const letterValue = letter.value.toUpperCase();
@@ -38,7 +38,7 @@ class GameUtil {
         button.disabled = true;
     }
 
-    static useNextWordleRow(wordleRow, currentRow, setCurrentRow){
+    static #useNextWordleRow(wordleRow, currentRow, setCurrentRow){
         const currentWordleRow = wordleRow[currentRow]
         const nextWordleRow = wordleRow[currentRow + 1]
         for (let i = 0; i < 5; i++) {
@@ -108,6 +108,35 @@ class GameUtil {
                 button.classList.remove('bg-green-800', 'bg-gray-900');
             }
         }
+    }
+
+    static checkWordleLetters(formattedWord, wordToGuess, word){
+        let allCorrect = true;
+        for (let i = 0; i < 5; i++) {
+            if (formattedWord[i] === wordToGuess[i]) {
+                this.#updateLetterIsCorrect(word[i]);
+            } else if (wordToGuess.includes(formattedWord[i])) {
+                this.#updateLetterIsFound(word[i]);
+                allCorrect = false;
+            } else {
+                this.#updateLetterIsNotFound(word[i]);
+                allCorrect = false;
+            }
+        }
+        return allCorrect;
+    }
+
+    static updateWordleGameState(allCorrect, formattedWord, wordToGuess, setShowLoseModal, setGameComplete, setShowWinModal, inputsRef, row, setCurrentRow){
+        if (allCorrect && formattedWord === wordToGuess) {
+            setShowWinModal(true);
+            setGameComplete(true);
+        } else if (row === 5 && formattedWord !== wordToGuess) {
+            setShowLoseModal(true);
+            setGameComplete(true);
+        } else if (row < 5) {
+            this.#useNextWordleRow(inputsRef.current, row, setCurrentRow);
+        }
+
     }
 }
 

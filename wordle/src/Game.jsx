@@ -6,7 +6,6 @@ import APICaller from "./lib/API/APICaller";
 import DBHelper from "./lib/Data/DBHelper";
 import GameInterface from "./lib/UI/GameInterface";
 
-
 export default function Game() {
   const inputsRef = useRef([]);
 
@@ -28,8 +27,6 @@ export default function Game() {
 
   const navigate = useNavigate();
 
-
-  // TODO: Consolidate into a single helper auth class?
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -47,7 +44,6 @@ export default function Game() {
     fetchUserData();
   }, []);
 
-  // TODO: Consolidate into GameCore?
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,63 +57,8 @@ export default function Game() {
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
-
-  useEffect(() => {
-    if (gameComplete) {
-      handleGameComplete();
-    }
-  }, [gameComplete]);
-
-  // TODO: Consolidate into GameCore [This is duplicated with Handle Enter]
-  const handleKeyDown = (e, row, col) => {
-
-    if (
-      e.key === "Backspace" &&
-      col > 0 &&
-      inputsRef.current[row][col].value === ""
-    ) {
-      inputsRef.current[row][col - 1].focus();
-    }
-
-    if (e.key === "Enter" && col === 4) {
-      let word = inputsRef.current[row];
-      let formattedWord = GameUtil.toUpperCaseWordleInput(word);
-
-      if(wordsLibrary.includes(formattedWord.toLowerCase())){
-        const newWords = [...words];
-        newWords[row] = formattedWord;
-        setWords(newWords);
-
-        // Check the formed word against the pre-defined word
-        let allCorrect = true;
-        for (let i = 0; i < 5; i++) {
-          if (formattedWord[i] === wordToGuess[i]) {
-            GameUtil.updateLetterIsCorrect(word[i]);
-          } else if (wordToGuess.includes(formattedWord[i])) {
-            GameUtil.updateLetterIsFound(word[i]);
-            allCorrect = false;
-          } else {
-            GameUtil.updateLetterIsNotFound(word[i]);
-            allCorrect = false;
-          }
-        }
-
-        if (allCorrect && formattedWord === wordToGuess) {
-          setShowWinModal(true);
-          setGameComplete(true);
-        } else if (row === 5 && formattedWord !== wordToGuess) {
-          setShowLoseModal(true);
-          setGameComplete(true);
-        } else if (row < 5) {
-          GameUtil.useNextWordleRow(inputsRef.current, row, setCurrentRow);
-        }
-      } else {
-        alert("Word is not in the library")
-      }
-    }
-  };
 
   const handleGameComplete = async () => {
     try {
@@ -132,8 +73,13 @@ export default function Game() {
       console.error("Error updating user stats:", error);
     }
   };
- 
-  // TODO: Abstract into GameCore
+
+  useEffect(() => {
+    if (gameComplete) {
+      handleGameComplete();
+    }
+  }, [gameComplete]);
+
   const resetGame = () => {
 
     GameUtil.resetClearWordleInputs(inputsRef.current);
@@ -146,56 +92,16 @@ export default function Game() {
     setShowLoseModal(false);
     setGameComplete(false);
 
-      // Fetch a new word to guess
+    // Fetch a new word to guess
     APICaller.fetchWordToGuess()
       .then((word) => {
-        setWordToGuess(word);  
+        setWordToGuess(word);
       })
       .catch((error) => {
-        console.error("Error fetching word to guess:", error);  
+        console.error("Error fetching word to guess:", error);
       });
   };
 
-  // TODO: Abstract into GameCore
-  const handleEnter = (row) => {
-    let word = inputsRef.current[row];
-    let formattedWord = GameUtil.toUpperCaseWordleInput(word);
-
-    if (wordsLibrary.includes(formattedWord.toLowerCase())) {
-
-      setWords(prevWords => {
-        const updatedWords = [...prevWords];
-        updatedWords[row] = formattedWord;
-        return updatedWords;
-      });
-
-
-      let allCorrect = true;
-      for (let i = 0; i < 5; i++) {
-        if (formattedWord[i] === wordToGuess[i]) {
-          GameUtil.updateLetterIsCorrect(word[i]);
-        } else if (wordToGuess.includes(formattedWord[i])) {
-          GameUtil.updateLetterIsFound(word[i]);
-        } else {
-          GameUtil.updateLetterIsNotFound(word[i]);
-        }
-      }
-
-      if (allCorrect && formattedWord === wordToGuess) {
-        setShowWinModal(true);
-        setGameComplete(true);
-      } else if (row === 5 && formattedWord !== wordToGuess) {
-        setShowLoseModal(true);
-        setGameComplete(true);
-      } else if (row < 5) {
-        GameUtil.useNextWordleRow(inputsRef.current, row, setCurrentRow);
-      }
-    } else {
-      alert("Word is not in the library");
-    }
-  };
-
-  // TODO: Abstract into GameCore
   const handleButtonClick = (letter) => {
     if (letter === "Enter") {
       handleEnter(currentRow);
@@ -205,6 +111,49 @@ export default function Game() {
       GameUtil.inputLetter(currentRow, words[currentRow].length, inputsRef.current, letter, setWords)
     }
   };
+
+  // TODO: Abstract into GameCore
+  const handleEnter = (row) => {
+    let word = inputsRef.current[row];
+    let formattedWord = GameUtil.toUpperCaseWordleInput(word);
+    
+    if (wordsLibrary.includes(formattedWord.toLowerCase())) {
+
+      setWords(prevWords => {
+        const updatedWords = [...prevWords];
+        updatedWords[row] = formattedWord;
+        return updatedWords;
+      });
+
+
+      let allCorrect = GameUtil.checkWordleLetters(formattedWord, wordToGuess, word);
+
+      GameUtil.updateWordleGameState()
+      GameUtil.updateWordleGameState(allCorrect, formattedWord, wordToGuess,
+        setShowLoseModal, setGameComplete, setShowWinModal,
+        inputsRef, row, setCurrentRow);
+
+    } else {
+      alert("Word is not in the library");
+    }
+  };
+
+  // TODO: Consolidate into GameCore [This is duplicated with Handle Enter]
+  const handleKeyDown = (e, row, col) => {
+
+    if (
+      e.key === "Backspace" &&
+      col > 0 &&
+      inputsRef.current[row][col].value === ""
+    ) {
+      inputsRef.current[row][col - 1].focus();
+    }
+
+    if (e.key === "Enter" && col === 4) {
+      handleEnter(row);
+    }
+  };
+
 
   return (
     <div className="flex justify-center items-center bg-gradient-to-b from-slate-950 to-slate-900 md:h-auto py-20 md:py-12 overflow-x-hidden">
