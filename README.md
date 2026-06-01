@@ -59,3 +59,4 @@ Follow these steps to clone and install the repository locally:
     http://localhost:5173
     ```
 3. **Enjoy the game!**
+   Try it at https://wordle-plus-ryushi.vercel.app/
